@@ -35,6 +35,9 @@ export const LoginFormWrapper = ({username, setUsername, password, setPassword}:
 
     const handleSalt = (ev: ChangeEvent) => {
         setSaltRounds(Number.parseInt((ev.target as HTMLInputElement).value))
+        const salt = bcrypt.genSaltSync(saltRounds);
+        const hashed = bcrypt.hashSync(password, salt);
+        setHashedPassword(hashed);
     }
 
     const handleSubmit = () => {
@@ -66,11 +69,11 @@ export const LoginFormWrapper = ({username, setUsername, password, setPassword}:
                 handlePassword
             } />
             <button onClick={handleSubmit}>Login</button>
-            <div>
+            {serverResponseOk ? <><div>
                 <span>Choose complexity of password: </span>
                 <input type='number' value={saltRounds} onChange={handleSalt}/>
             </div>
-            <div>Your hashed password would be: {hashedPassword}</div>
+                <div>Your hashed password would be: {hashedPassword}</div></> : <div>You must be authorized, remember son?</div>}
         </div>
     )
 }
